@@ -1,0 +1,12 @@
+body{
+	color: #333333;
+	background-color: #ffffff;
+	font-family: "Hiragino Kaku Gothic Pro", "ƒqƒ‰ƒMƒmŠpƒS Pro W4", 'ƒƒCƒŠƒI', "Osaka", "‚l‚r ‚oƒSƒVƒbƒN ", sans-serif;
+	padding: 10px;
+}
+
+h1 {
+	font-size: 30px;
+	border-left: 6px solid #D8D8D8;
+	padding-left: 10px;
+}

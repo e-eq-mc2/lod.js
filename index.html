@@ -1,0 +1,200 @@
+<!DOCTYPE html> 
+<!-- 
+the tag avobe is used to define DTD(Document Type Definition)
+DTD declares which version of html is used in this file
+these below are some of
+HTML5 : <!DOCTYPE html> 
+HTML 4.01 Strict : <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+HTML 4.01 Transitional : <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+HTML 4.01 Frameset : <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+-->
+
+<!-- 
+Browser consists of front-end(firefox, Safari, Chrome) and engine(Gecko, WebKit)
+Browser's Two main Works
+	1. Display page
+	2. Give Web apprications(javascript) APIs
+		We can use the functions of Platform(Browser + OS)
+		like custermizing event handler, modifing DOM, calling HTTP to download data(AJAX)
+
+What's browser doing behind us?
+	1. download via HTTP
+		cliant  -> request  w/ URL  -> server
+		cliant <-  response w/ DATA <- server
+		GET : used to download data from a server
+		PUT : a kind of singnal to change something such as update a database
+	
+	2. parse and make model(DOM tree, CSSOM tree) from elements
+		></->HTML -> DOM   tree
+		CSS  -> CSSOM tree
+		DOM + CSSOM -> Render tree(CSS Box model)
+		Render tree has CSS data as well as DOM
+	
+	3. layout
+		compute the size and position of each box(node) of render tree
+		How to compute them is as many as the number of layout(flow, float, absolute, multi-column, table/grid)
+		Ex. flow : left-right and top-bottom
+		Basic Idea
+		1. child decide the size
+		2. parent decide the position of the child
+		3. parent's size is determined from the child's size and position
+		
+	4. rendering
+		render tree is traversed and render's "paint()" event is called to dsplay content on the screen
+
+Parsing execution flow is as follows
+	1. download this HTML document
+	2. start parsing the HTML document FROM TOP TO BOTTOM
+	3. if HTML parsing comes to link element of stylesheet, the document is downloaded, parsed
+	4. if HTML parsing comes to link element of javascript, the document is downloaded, parsed, and run
+	5. and HLML parsing continues parsing body element
+	6. When parsing is ended, the event "onload" is fired 
+-->
+
+<html lang="ja"> 
+<!-- 
+this is a tag, a start tag of hmlt element
+start tag and end tag makes an element
+html is an element name
+lang is an attribute of this tag 
+the form of attribute is "name = "value"" (the value of attribute must be quoted by double quotation)
+a html element is the root of a HTML document
+so each html document has only one html element
+-->
+
+<head>
+<!-- head element represents a collection of metadata about the document -->
+	<meta charset="UTF-8">
+	<!-- meta element represents any metadata that other meta-related element(link, script, style, or title) can not represent -->
+	<!-- charset attribute declares the character encoding used in this page -->
+	<link rel="stylesheet" href="css/html5reset-1.6.1.css">
+	<link rel="stylesheet" href="css/main.css">
+	<!-- link element specifies relationship between this document and another -->
+	<!-- linked documents are loaded on the fly in order from top to bottom -->
+	<!-- rel  attribute of a link element defines the relationship of linked document to current document -->
+	<!-- type attribute of a link element specifies the type(text/html, text/css, ...) of the liked document -->
+	<!-- href attribute of a link element specifies the URL of the linked document -->
+	<!-- In html5 you can omit the type attribute of link , style, script element. -->
+	<script src="js/lib/webgl-debug.js"></script>
+	<script src="js/lib/glMatrix.js"></script>
+	<script src="js/webGLutil.js"></script>
+	<script src="js/LOD.js"></script>
+	<script src="js/main.js"></script>
+	<script id="vs" type="x-shader/x-vertex">
+precision mediump float;
+// mat2 m = mat2(1, 2,  3, 4);
+// vec2 v = vec2(10, 20);
+//
+// m * v =
+// | 1, 3 | {1} = { 1*10 + 3*20}
+// | 2, 4 | {2} = { 2*10 + 4*20}
+//
+// mat2 a = mat2( 1,  2,   3,  4);
+// mat2 b = mat2(10, 20,  30, 40);
+//
+// a * b = 
+// | 1, 3 | | 10, 30 |  = | 1*10+3*20, 1*30+3*40 |
+// | 2, 4 | | 20, 40 |  = | 2*10+4*20, 2*30+4*40 |
+//
+// it means a matrix is layed out in column-major format in memory
+// but it dose not affect operation(*)
+
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
+
+uniform mat4  pMatrix;
+uniform mat4 mvMatrix;
+uniform mat4  nMatrix; // transformation matrix for normal  == (mvMat^-1)^t
+uniform mat4  lMatrix; // model view matrix for light
+
+uniform vec3 lightPosition;
+
+varying vec3 v_Normal;
+varying vec3 v_lightRay;
+#if 1
+uniform vec4 materialDiffuse;
+uniform vec4 materialAmbient;
+uniform vec4 lightDiffuse;
+uniform vec4 lightAmbient;
+varying vec4 v_Id;
+#endif
+
+void main(void) {
+	// eye coordinate system
+	vec4 vertexEyeSpace = mvMatrix * vec4(vertexPosition, 1.0);
+	vec4 normalEyeSpace =  nMatrix * vec4(vertexNormal  , 1.0);
+	vec4 lightEyeSpace  =  lMatrix * vec4(lightPosition , 1.0);
+
+	v_Normal   = normalEyeSpace.xyz;
+	v_lightRay = (lightEyeSpace - vertexEyeSpace).xyz;
+
+#if 1
+	vec3 N = normalize(v_Normal);
+	vec3 L = normalize(v_lightRay);
+	float NdotL = dot(N, L);
+	v_Id = materialDiffuse * lightDiffuse * clamp(NdotL, 0.0, 1.0);
+#endif
+
+	// clip coordinate system
+	gl_Position = pMatrix * vertexEyeSpace;
+}
+	</script>
+	<script id="fs" type="x-shader/x-fragment">
+precision mediump float;
+		
+varying vec3 v_Normal;
+varying vec3 v_lightRay;
+
+uniform vec4 materialDiffuse;
+uniform vec4 materialAmbient;
+uniform vec4 lightDiffuse;
+uniform vec4 lightAmbient;
+
+#if 1
+varying vec4 v_Id;
+#endif
+
+void main(void) { // each fragment is processed by this function
+#if 0
+	vec3 N = normalize(v_Normal);
+	vec3 L = normalize(v_lightRay);
+	float NdotL = dot(N, L);
+	vec4 Id = materialDiffuse * lightDiffuse * max(NdotL, 0.0);
+#else
+	vec4 Id = v_Id;
+#endif
+
+	vec4 Ia = materialAmbient * lightAmbient;
+	vec4 Isum = Ia + Id;
+	gl_FragColor = Isum;
+	//gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+}
+	</script>
+	<title>lod.js</title>
+</head>
+<body onload="console.log(&quot;call webGL() ...&quot;); webGLStart(); console.log(&quot;... webGL() is done&quot;);">
+<!-- when you escape double quote, it need to be HTLM-escaped(&quot;), not JavaScript-escaped(/") -->
+	<!-- onload event fires when this document is completely loaded -->
+	<!-- 
+	<h1>aaaaa</h1>
+	<h2>いいいいbbbbbb This is floated</h2>
+	<h3>これはh3です。</h2>
+		<p>
+			this is a p element bla bla bla
+			<img src="img/kokoro.png">
+			<em>This is a em element in p element</em>
+		</p>
+	 -->
+ 		<div id="screen" style="position: relative;">
+			<div id="canvasArea">
+				<canvas id="webGLCanvas" style="position: absolute; top: 0px;" width="512px" height="512px">
+					Your browser does not support the HTML5 canvas element.
+				</canvas>
+			</div>
+			<div id="textArea" style="position: absolute; top: 20px;">
+				<h1>Simple Level of Detail (LOD) </h1>
+				<div id="info"></div>
+			</div>
+		</div>
+</body>
+</html>
