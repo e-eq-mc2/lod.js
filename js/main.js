@@ -6,8 +6,8 @@
 
 $(function() {
 //function webGLStart() {
-	var ENABLE_GL_DEBUG = true;
-	//var ENABLE_GL_DEBUG = false;
+	//var ENABLE_GL_DEBUG = true;
+	var ENABLE_GL_DEBUG = false;
 
 	var canvas = document.getElementById("webGLCanvas");
 	var gl = initWebGL(canvas, ENABLE_GL_DEBUG);
