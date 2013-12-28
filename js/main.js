@@ -4,15 +4,16 @@
 
 "use strict";
 
-function webGLStart() {
-	var GL_DEBUG_MODE = true;
-	//var GL_DEBUG_MODE = false;
+$(function() {
+//function webGLStart() {
+	var ENABLE_GL_DEBUG = true;
+	//var ENABLE_GL_DEBUG = false;
 
 	var canvas = document.getElementById("webGLCanvas");
-	var gl = initWebGL(canvas, GL_DEBUG_MODE);
+	var gl = initWebGL(canvas, ENABLE_GL_DEBUG);
 	var prgObj = initProgram(gl, "vs", "fs");
 
-	gl.useProgram(prgObj); // Don't forget this 
+	gl.useProgram(prgObj); // Don't forget this !!!!
 
 	var uniform = new UniformLocation();
 	initLight(gl, prgObj, uniform);
@@ -24,6 +25,7 @@ function webGLStart() {
 
 	var angle = 0.0;
 	(function drawScene() {
+		var t0 = 
 		gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 		gl.enable(gl.DEPTH_TEST);
 		gl.depthFunc(gl.LEQUAL);
@@ -51,7 +53,15 @@ function webGLStart() {
 		lod.renderTree(tree);
 		lod.updateTree(tree, gl, prgObj, mvpMatrix);
 		gl.flush();
-	
+		
+		var dim = new String(tree.root.dim.x + "x" + tree.root.dim.y);
+		var num = new String(tree.numNodes);
+		while ( num.length < 5 ) {num = " " + num;}
+		num = num.replace(/ /g, "&nbsp;");
+		$("#info").html(
+			"<p>Nodes(each=" + dim + ") :" + num + "</p>"
+		);
+		
 		var timeoutId = setTimeout(drawScene, 1.0/30 * 1000);
 	} ());
 	
@@ -97,4 +107,5 @@ function webGLStart() {
 		attrib.linkBuffer("vertexNormal"  , gl, prgObj, 3, gl.FLOAT);
 		attrib.bindBuffer("vertexIndex", gl);
 	}
-}
+//}
+});

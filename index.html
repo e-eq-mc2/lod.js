@@ -33,7 +33,7 @@ What's browser doing behind us?
 	3. layout
 		compute the size and position of each box(node) of render tree
 		How to compute them is as many as the number of layout(flow, float, absolute, multi-column, table/grid)
-		Ex. flow : left-right and top-bottom
+		ex. flow : left-right and top-bottom
 		Basic Idea
 		1. child decide the size
 		2. parent decide the position of the child
@@ -75,6 +75,7 @@ so each html document has only one html element
 	<!-- type attribute of a link element specifies the type(text/html, text/css, ...) of the liked document -->
 	<!-- href attribute of a link element specifies the URL of the linked document -->
 	<!-- In html5 you can omit the type attribute of link , style, script element. -->
+	<script src="js/lib/jquery-1.10.2.js"></script>
 	<script src="js/lib/webgl-debug.js"></script>
 	<script src="js/lib/glMatrix.js"></script>
 	<script src="js/webGLutil.js"></script>
@@ -172,19 +173,19 @@ void main(void) { // each fragment is processed by this function
 	</script>
 	<title>lod.js</title>
 </head>
-<body onload="console.log(&quot;call webGL() ...&quot;); webGLStart(); console.log(&quot;... webGL() is done&quot;);">
+
+<!-- <body onload="console.log(&quot;call webGL() ...&quot;); webGLStart(); console.log(&quot;... webGL() is done&quot;);"> -->
 <!-- when you escape double quote, it need to be HTLM-escaped(&quot;), not JavaScript-escaped(/") -->
-	<!-- onload event fires when this document is completely loaded -->
-	<!-- 
-	<h1>aaaaa</h1>
-	<h2>いいいいbbbbbb This is floated</h2>
-	<h3>これはh3です。</h2>
-		<p>
-			this is a p element bla bla bla
-			<img src="img/kokoro.png">
-			<em>This is a em element in p element</em>
-		</p>
-	 -->
+<!-- onload event fires when this document is completely loaded -->
+<body>
+<!-- 	<h1>aaaaa</h1> -->
+<!-- 	<h2>いいいいbbbbbb This is floated</h2> -->
+<!-- 	<h3>これはh3です。</h2> -->
+<!-- 		<p> -->
+<!-- 			this is a p element bla bla bla -->
+<!-- 			<img src="img/kokoro.png"> -->
+<!-- 			<em>This is a em element in p element</em> -->
+<!-- 		</p> -->
  		<div id="screen" style="position: relative;">
 			<div id="canvasArea">
 				<canvas id="webGLCanvas" style="position: absolute; top: 0px;" width="512px" height="512px">
@@ -192,8 +193,8 @@ void main(void) { // each fragment is processed by this function
 				</canvas>
 			</div>
 			<div id="textArea" style="position: absolute; top: 20px;">
-				<h1>Simple Level of Detail (LOD) </h1>
-				<div id="info"></div>
+				<h1 style=>Simple Level of Detail (LOD)</h1>
+				<div id="info" style="margin-top: 30px; color: #666666; font-size: 20px; font-weight: bold;"></div>
 			</div>
 		</div>
 </body>

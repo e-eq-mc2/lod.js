@@ -1,4 +1,5 @@
-function initWebGL(canvas, GL_DEBUG_MODE) {
+function initWebGL(canvas, ENABLE_GL_DEBUG) {
+
 	var gl = canvas.getContext("webgl");
 	
 	if ( ! gl ) {
@@ -6,11 +7,12 @@ function initWebGL(canvas, GL_DEBUG_MODE) {
 		return null;
 	}
 
-	if ( GL_DEBUG_MODE ) {
-		console.log("GL_DEBUG_MODE is ON");
+	console.log("ENABLE_GL_DEBUG : " + ENABLE_GL_DEBUG);
+
+	if ( ENABLE_GL_DEBUG ) {
+		var PRINT_LOG = false;
 		var numGLCall = 0;
-		var printLog = false;
-		if ( printLog ) {
+		if ( PRINT_LOG ) {
 			gl = WebGLDebugUtils.makeDebugContext( gl, undefined, 
 				function (functionName, args) {
 					++numGLCall;
@@ -23,7 +25,6 @@ function initWebGL(canvas, GL_DEBUG_MODE) {
 		} else {
 			gl = WebGLDebugUtils.makeDebugContext( gl, undefined);
 		}
-
 	}
 
 	gl.viewportWidth  = canvas.width ;
