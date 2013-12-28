@@ -46,7 +46,7 @@ var LOD = function () {
 			"numNodes": 0,
 			"acceptableCellSizeMax": 10.0, // if max cell length of a node in pixel go over  this number, the node is divided
 			"acceptableCellSizeMin": 4.5, // if max cell length of a node in pixel go under this number, the node is divided
-			"acceptableNumNodes": 300
+			"acceptableNumNodes": 128
 		};
 		loadConfig(tree);
 		addRoot(tree, gl, prgObj);
@@ -102,8 +102,8 @@ var LOD = function () {
 		var acceptableCellSizeMax = tree.acceptableCellSizeMax;
 		var acceptableCellSizeMin = tree.acceptableCellSizeMin;
 		var acceptableNumNodes = tree.acceptableNumNodes;
+		//console.log("tree.numNodes:" + tree.numNodes);
 		(function traverse(node) {
-			//console.log("numNodes: " + tree.numNodes);
 			var dpxl = deltaPixels(node, mvpMatrix, viewportWidth, viewportHeight);
 			// lock node
 			if ( node.getNumReadyChildren() == 4 ) {
@@ -123,7 +123,7 @@ var LOD = function () {
 						// unlock tree
 						// lock node
 						if ( node.getNumLoadingChildren() == 0 ) {
-							node.loadingChildren &= 1<<0 & 1<<1 & 1<<2 & 1<<3;
+							node.loadingChildren = 1<<0 | 1<<1 | 1<<2 | 1<<3; // make all bits up
 							// unlock node
 							for (var childIdx=0; childIdx < 4; ++childIdx) {
 								addChild(node, childIdx, tree, gl, prgObj);
@@ -162,25 +162,40 @@ var LOD = function () {
 				parent.loadingChildren &= ~(1<<childIdx);
 				// unlock parent
 				// lock tree
-				++tree.numNodes;
+				if ( parent.getNumReadyChildren() == 4 ) {
+					tree.numNodes += 4;
+				}
 				// unlock tree
 			}
 		}
 		function deleteChildren(node, tree) {
+			if ( node.getNumLoadingChildren() > 0 ) {
+				return false;
+			}
+			
 			if ( node.getNumReadyChildren() == 4 ) {
+				var numDeletableChildren = 0;
 				for (var childIdx=0; childIdx < 4; ++childIdx) {
-					deleteChildren(node.children[childIdx], tree);
+					if ( deleteChildren(node.children[childIdx], tree) ) {
+						++numDeletableChildren;
+					}
+				}
+				// This node's children can't be deleted.
+				// Because some of the children are in loading status.
+				if ( numDeletableChildren < 4 ) return false;
 
+				for (var childIdx=0; childIdx < 4; ++childIdx) {
 					// lock node
 					node.readyChildren &= ~(1<<childIdx);
 					node.children[childIdx].destroy();
 					node.children[childIdx] = null;
 					// unlock node
-					// lock tree
-					--tree.numNodes;
-					// unlock tree
 				}
-			}
+				// lock tree
+				tree.numNodes -= 4;
+				// unlock tree
+			} 
+			return true;
 		}
 		function deltaPixels(node, mvpMatrix, viewportWidth, viewportHeight) {
 			var offX = node.offset.x;
