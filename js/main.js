@@ -25,7 +25,6 @@ $(function() {
 
 	var angle = 0.0;
 	(function drawScene() {
-		var t0 = 
 		gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 		gl.enable(gl.DEPTH_TEST);
 		gl.depthFunc(gl.LEQUAL);
@@ -54,17 +53,14 @@ $(function() {
 		lod.updateTree(tree, gl, prgObj, mvpMatrix);
 		gl.flush();
 		
-		var dim = new String(tree.root.dim.x + "x" + tree.root.dim.y);
-		var num = new String(tree.numNodes);
-		while ( num.length < 5 ) {num = " " + num;}
-		num = num.replace(/ /g, "&nbsp;");
-		$("#info").html(
-			"<p>Nodes(each=" + dim + ") :" + num + "</p>"
-		);
-		
+		printInfo(tree);
+
 		var timeoutId = setTimeout(drawScene, 1.0/30 * 1000);
 	} ());
 	
+	////////////////////
+	// local function //
+	////////////////////
 	function initLight(gl, prgObj, uniform) {
 		//var uniform = new UniformLocation();
 		uniform.setLocation("lightPosition", gl, prgObj);
@@ -106,6 +102,27 @@ $(function() {
 		attrib.linkBuffer("vertexPosition", gl, prgObj, 3, gl.FLOAT);
 		attrib.linkBuffer("vertexNormal"  , gl, prgObj, 3, gl.FLOAT);
 		attrib.bindBuffer("vertexIndex", gl);
+	}
+	function printInfo(tree) {
+		var nodeDim = new String(tree.root.dim.x + "x" + tree.root.dim.y);
+		var numNodes = num2str(tree.numNodes, 5);
+		var acceptableCellSizeMin = tree.acceptableCellSizeMin;
+		var acceptableCellSizeMax = tree.acceptableCellSizeMax;
+		$("#info").html(
+			"<p>Node x-y Dimension:&nbsp;" + nodeDim + "</p>" +
+			"<p>Acceptable Cell Size:&nbsp;" + acceptableCellSizeMin + "px <= Cell <= " + acceptableCellSizeMax + "px</p>" +
+			"<p>Number of Nodes:" + numNodes + "</p>"
+		);
+		
+
+		////////////////////
+		// local function //
+		////////////////////
+		function num2str(num, digit) {
+			var str = new String(num);
+			while ( str.length < digit ) {str = " " + str;}
+			return str.replace(/ /g, "&nbsp;");
+		}
 	}
 //}
 });

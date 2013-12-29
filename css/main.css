@@ -10,3 +10,11 @@ h1 {
 	border-left: 6px solid #D8D8D8;
 	padding-left: 10px;
 }
+
+#info {
+	font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+	margin-top: 20px; 
+	color: #333333; 
+	font-size: 20px; 
+	font-weight: bold;
+}
