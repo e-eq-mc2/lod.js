@@ -12,9 +12,9 @@ h1 {
 }
 
 #info {
-	font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
-	margin-top: 20px; 
-	color: #333333; 
-	font-size: 20px; 
+/* 	font-family: Consolas, 'Courier New', Courier, Monaco, monospace; */
+	font-size: 25px; 
 	font-weight: bold;
+	color: rgba(255, 180, 0, 0.7);
+	margin-top: 20px; 
 }
