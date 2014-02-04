@@ -25,32 +25,34 @@ $(function() {
 
 	var angle = 0.0;
 	(function drawScene() {
-		gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-		gl.enable(gl.DEPTH_TEST);
-		gl.depthFunc(gl.LEQUAL);
-		gl.clearColor(1.0, 1.0, 1.0, 1.0);
-		gl.clearDepth(1);
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+		(function drawMainView() {
+			gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+			gl.enable(gl.DEPTH_TEST);
+			gl.depthFunc(gl.LEQUAL);
+			gl.clearColor(1.0, 1.0, 1.0, 1.0);
+			gl.clearDepth(1);
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 		
-		var   pMatrix = mat4.frustum(-0.3, 0.3, -0.3, 0.3, 0.5, 10.0);
-		var  mvMatrix = mat4.identity(mat4.create());
-		var   nMatrix = mat4.identity(mat4.create());
-		var mvpMatrix = mat4.identity(mat4.create());
+			var   pMatrix = mat4.frustum(-0.3, 0.3, -0.3, 0.3, 0.5, 10.0);
+			var  mvMatrix = mat4.identity(mat4.create());
+			var   nMatrix = mat4.identity(mat4.create());
+			var mvpMatrix = mat4.identity(mat4.create());
 
-		angle += 0.01;
-		mat4.translate(mvMatrix, [0.0, 0.0, -4.8 + Math.sin(angle * 0.5)*4.0]);
-		mat4.translate(mvMatrix, [0.0, 0.2, 0.0]);
-		mat4.rotateX(mvMatrix, -45.0/ 180 * Math.PI);
-		mat4.rotateZ(mvMatrix, angle);
-		mat4.translate(mvMatrix, [-0.5, -0.5, 0.0]);
-		mat4.transpose(mat4.inverse(mvMatrix, nMatrix));
-		mat4.multiply(pMatrix, mvMatrix, mvpMatrix);
-		gl.uniformMatrix4fv(uniform.getLocation("pMatrix"), false, pMatrix);
-		gl.uniformMatrix4fv(uniform.getLocation("mvMatrix"), false, mvMatrix);
-		gl.uniformMatrix4fv(uniform.getLocation("nMatrix" ), false, nMatrix);
+			angle += 0.01;
+			mat4.translate(mvMatrix, [0.0, 0.0, -4.8 + Math.sin(angle * 0.5)*4.0]);
+			mat4.translate(mvMatrix, [0.0, 0.2, 0.0]);
+			mat4.rotateX(mvMatrix, -45.0/ 180 * Math.PI);
+			mat4.rotateZ(mvMatrix, angle);
+			mat4.translate(mvMatrix, [-0.5, -0.5, 0.0]);
+			mat4.transpose(mat4.inverse(mvMatrix, nMatrix));
+			mat4.multiply(pMatrix, mvMatrix, mvpMatrix);
+			gl.uniformMatrix4fv(uniform.getLocation("pMatrix"), false, pMatrix);
+			gl.uniformMatrix4fv(uniform.getLocation("mvMatrix"), false, mvMatrix);
+			gl.uniformMatrix4fv(uniform.getLocation("nMatrix" ), false, nMatrix);
 
-		lod.renderTree(tree);
-		lod.updateTree(tree, gl, prgObj, mvpMatrix);
+			lod.renderTree(tree);
+			lod.updateTree(tree, gl, prgObj, mvpMatrix);
+		})();
 		gl.flush();
 		
 		printInfo(tree);

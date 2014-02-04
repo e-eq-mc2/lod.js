@@ -1,11 +1,15 @@
 var LOD = function () {
+	//////////////////////
+	// private variable //
+	//////////////////////
 	var _connector = new function () {
-		var scheme = "http";
-		var host = document.domain;
-		var port = "8080";
-		var basePath = "/lod.js/data";
+		//var scheme = "http";
+		//var host = document.domain;
+		//var port = "8080";
+		//var basePath = "/lod.js/data";
+		//this.baseURL = scheme + "://"+ host + ":" + port + basePath;
 
-		this.baseURL = scheme + "://"+ host + ":" + port + basePath;
+		this.baseURL = document.URL.replace(/[^/]+$/, "") + "data";
 		this.getConfigURL = function () { 
 			var url = this.baseURL + "/" + "config.json";
 			return url;
@@ -240,28 +244,28 @@ var LOD = function () {
 				}
 			}
 			return {"maxCellSize": maxPxl, "isInsideFrustum": numInsideFrustum <= 4};
-		}
 			
-		////////////////////
-		// local function //
-		////////////////////
-		function xyz2win(x, y, z, mvpMatrix, width, height) {
-			// Object Coordinates
-			var obj = [x, y, z, 1.0];
-			// Clip Coordinates 
-			var clip = [0, 0, 0, 0];
-			mat4.multiplyVec4(mvpMatrix, obj, clip);
-			// Normalized Device Coordinates (NDC)
-			var ndc = [clip[0]/clip[3], clip[1]/clip[3], clip[2]/clip[3]];
-			// Window Coordinates
-			var win = {
-				"x": ndc[0]*width *0.5,
-				"y": ndc[1]*height*0.5,
-				"isInsideFrustum" : ndc[0] >= -1 && ndc[0] <= 1 && ndc[1] >= -1 && ndc[1] <= 1
-			};
-			return win;
+			////////////////////
+			// local function //
+			////////////////////
+			function xyz2win(x, y, z, mvpMatrix, width, height) {
+				// Object Coordinates
+				var obj = [x, y, z, 1.0];
+				// Clip Coordinates 
+				var clip = [0, 0, 0, 0];
+				mat4.multiplyVec4(mvpMatrix, obj, clip);
+				// Normalized Device Coordinates (NDC)
+				var ndc = [clip[0]/clip[3], clip[1]/clip[3], clip[2]/clip[3]];
+				// Window Coordinates
+				var win = {
+					"x": ndc[0]*width *0.5,
+					"y": ndc[1]*height*0.5,
+					"isInsideFrustum" : ndc[0] >= -1 && ndc[0] <= 1 && ndc[1] >= -1 && ndc[1] <= 1
+				};
+				return win;
+			}
 		}
-	};
+	}; // end of updateTree
 
 	this.renderTree = function (tree) {
 		tree.root.attrib.bindBuffer("vertexIndex");
@@ -287,7 +291,7 @@ var LOD = function () {
 			gl.drawElements(gl.TRIANGLES, node.indices.length, gl.UNSIGNED_SHORT, 0);
 			//gl.drawElements(gl.LINES    , node.indices.length, gl.UNSIGNED_SHORT, 0);
 		}	
-	};
+	}; // end of renderTree
 	
 	////////////////////
 	// local function //
@@ -339,7 +343,7 @@ var LOD = function () {
         this.indices = null;
         this.normals = null;
         this.attrib = null;
-	}
+	};
 	function triangleIndices(dimX, dimY) {
 		var numX = dimX-1; var numY = dimY-1;
 		var indices = new Uint16Array(numX * numY * 2 * 3);
