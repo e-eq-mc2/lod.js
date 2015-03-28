@@ -1,0 +1,20 @@
+body{
+	color: #333333;
+	background-color: #ffffff;
+	font-family:'Lucida Grande', 'Hiragino Kaku Gothic ProN', 'ƒqƒ‰ƒMƒmŠpƒS ProN W3', Meiryo, ƒƒCƒŠƒI, sans-serif;
+	padding: 10px;
+}
+
+h1 {
+	font-size: 30px;
+	border-left: 6px solid #D8D8D8;
+	padding-left: 10px;
+}
+
+#info {
+/* 	font-family: Consolas, 'Courier New', Courier, Monaco, monospace; */
+	font-size: 25px; 
+	font-weight: bold;
+	color: rgba(255, 180, 0, 0.7);
+	margin-top: 20px; 
+}
