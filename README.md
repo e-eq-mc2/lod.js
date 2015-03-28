@@ -2,7 +2,7 @@ lod.js - a WebGL demo
 ========
 This is a **WebGL** demo based on **Level of Detail (LOD)**.
 
-[http://e-eq-mc2.github.io/lod.js/](http://e-eq-mc2.github.io/lod.js/)
+[Demo Page](http://e-eq-mc2.github.io/lod.js/)
 
 ![](img/thumbnail.png?raw=true)
 
