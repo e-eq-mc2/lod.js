@@ -1,7 +1,7 @@
 TARGET0=mk_data
 
 CXX=g++
-CXX_FLAGS=-fopenmp
+#CXX_FLAGS=-fopenmp
 
 OBJ0=mk_data.o
 
