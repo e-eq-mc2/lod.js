@@ -48,7 +48,7 @@ var LOD = function () {
 			"root": null,
 			"numLevel": 0,
 			"numNodes": 0,
-			"acceptableCellSizeMax": 10.0, // if max cell length of a node in pixel go over  this number, the node is divided
+			"acceptableCellSizeMax": 5.0, // if max cell length of a node in pixel go over  this number, the node is divided
 			"acceptableCellSizeMin": 2.0, // if max cell length of a node in pixel go under this number, the node is divided
 			"acceptableNumNodes": 512
 		};
