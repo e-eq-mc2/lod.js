@@ -50,7 +50,7 @@ var LOD = function () {
 			"numNodes": 0,
 			"acceptableCellSizeMax": 10.0, // if max cell length of a node in pixel go over  this number, the node is divided
 			"acceptableCellSizeMin": 4.5, // if max cell length of a node in pixel go under this number, the node is divided
-			"acceptableNumNodes": 256
+			"acceptableNumNodes": 512
 		};
 		loadConfig(tree);
 		addRoot(tree, gl, prgObj);
