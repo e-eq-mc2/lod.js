@@ -33,15 +33,16 @@ $(function() {
 			gl.clearDepth(1);
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 		
-			var   pMatrix = mat4.frustum(-0.3, 0.3, -0.3, 0.3, 0.5, 10.0);
+			var   pMatrix = mat4.frustum(-0.3, 0.3, -0.3, 0.3, 0.2, 15.0);
 			var  mvMatrix = mat4.identity(mat4.create());
 			var   nMatrix = mat4.identity(mat4.create());
 			var mvpMatrix = mat4.identity(mat4.create());
 
 			angle += 0.01;
-			mat4.translate(mvMatrix, [0.0, 0.0, -4.8 + Math.sin(angle * 0.5)*4.0]);
+      var distance = 5.5;
+			mat4.translate(mvMatrix, [0.0, 0.0, - distance + Math.sin(angle * 0.5) * distance * 0.92]);
 			mat4.translate(mvMatrix, [0.0, 0.2, 0.0]);
-			mat4.rotateX(mvMatrix, -45.0/ 180 * Math.PI);
+			mat4.rotateX(mvMatrix, -30.0 / 180 * Math.PI);
 			mat4.rotateZ(mvMatrix, angle);
 			mat4.translate(mvMatrix, [-0.5, -0.5, 0.0]);
 			mat4.transpose(mat4.inverse(mvMatrix, nMatrix));
