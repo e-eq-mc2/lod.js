@@ -27,7 +27,13 @@ float zfunc(float x, float y) {
 	const float sigy2 = sigy * sigy;
 	const float x2 = (x-x0) * (x-x0);
 	const float y2 = (y-y0) * (y-y0);
-	const float z = a * ( std::exp( - (x2/(2.0*sigx2) + y2/(2.0*sigy2)) ) + 0.1*std::sin(x*32.0)*std::sin(y*32.0) );
+  const float fxy = 0.05;
+	const float z = 
+    a * ( std::exp( - (x2/(2.0*sigx2) + y2/(2.0*sigy2)) ) 
+      + fxy/2.0*std::sin(x*3.0)*std::sin(y*3.0) 
+      + fxy/4.0*std::sin(x*16.0)*std::sin(y*16.0) 
+      //+ fxy/8.0*std::sin(x*32.0)*std::sin(y*32.0) 
+    );
 #endif
 	return z;
 }
@@ -66,6 +72,11 @@ struct Image {
 	~Image() {delete [] data;}
 
 	float &operator() (int ix, int iy) {
+    if ( ix <  0     ) ix = 0;
+    if ( iy <  0     ) iy = 0;
+    if ( ix >= dim_x ) ix = dim_x - 1;
+    if ( iy >= dim_y ) iy = dim_y - 1;
+
 		return data[dim_x * iy + ix];
 	}
 
@@ -138,11 +149,19 @@ int main (int argc, char *argv[]) {
 			for (int iy=0; iy < dim_y; ++iy)
 			for (int ix=0; ix < dim_x; ++ix) {
 				crn(ix, iy) = (
-					prv(ix*2  , iy*2  )+
-					prv(ix*2+1, iy*2  )+
-					prv(ix*2  , iy*2+1)+
-					prv(ix*2+1, iy*2+1)
-				) * 0.25;
+					prv(ix*2-1, iy*2-1) *1.0+
+					prv(ix*2-1, iy*2  ) *2.0+
+					prv(ix*2-1, iy*2+1) *1.0+
+
+					prv(ix*2  , iy*2-1) *2.0+
+					prv(ix*2  , iy*2  ) *4.0+
+					prv(ix*2  , iy*2+1) *2.0+
+
+					prv(ix*2+1, iy*2-1) *1.0+
+					prv(ix*2+1, iy*2  ) *2.0+
+					prv(ix*2+1, iy*2+1) *1.0
+
+				) / 16.0;
 			}
 		}
 	} // lv

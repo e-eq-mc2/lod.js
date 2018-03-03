@@ -40,11 +40,12 @@ $(function() {
 			var   nMatrix = mat4.identity(mat4.create());
 			var mvpMatrix = mat4.identity(mat4.create());
 
-			angle += 0.015;
+      var damper = Math.cos(angle) < 0.0 ? (1.0 + Math.cos(angle)) : 1.0;
+			angle += 0.008 * damper + 0.0005;
       var distance = 12.0;
-			mat4.translate(mvMatrix, [0.0, 0.0, - distance + Math.sin(angle * 0.5) * distance * 0.95]);
+			mat4.translate(mvMatrix, [0.0, 0.0, - distance - (Math.cos(angle) * distance * 0.95) ]);
 			mat4.translate(mvMatrix, [0.0, 0.2, 0.0]);
-			mat4.rotateX(mvMatrix, -60.0 / 180 * Math.PI);
+			mat4.rotateX(mvMatrix, -40.0 / 180 * Math.PI);
 			mat4.rotateZ(mvMatrix, angle);
 			mat4.translate(mvMatrix, [-0.5, -0.5, 0.0]);
 			mat4.transpose(mat4.inverse(mvMatrix, nMatrix));
@@ -80,7 +81,7 @@ $(function() {
 		uniform.setLocation("materialAmbient", gl, prgObj);
 		uniform.setLocation("materialDiffuse", gl, prgObj);
 		gl.uniform4fv(uniform.getLocation("materialAmbient"), [0.1, 0.1, 0.1, 1.0]);
-		gl.uniform4fv(uniform.getLocation("materialDiffuse"), [0.5, 0.5, 0.5, 1.0]);
+		gl.uniform4fv(uniform.getLocation("materialDiffuse"), [0.6, 0.6, 0.6, 1.0]);
 	}
 	function initMatrix(gl, prgObj, uniform) {
 		//var uniform = new UniformLocation();
@@ -109,13 +110,18 @@ $(function() {
 		attrib.bindBuffer("vertexIndex", gl);
 	}
 	function printInfo(tree) {
-		var nodeDim = new String(tree.root.dim.x + "x" + tree.root.dim.y);
-		var numNodes = num2str(tree.numNodes, 5);
-		var acceptableCellSizeMin = tree.acceptableCellSizeMin;
-		var acceptableCellSizeMax = tree.acceptableCellSizeMax;
+		var nodeDim                   = new String(tree.root.dim.x + "x" + tree.root.dim.y);
+		var numNodes                  = num2str(tree.numNodes, 5);
+		var numLoadingNodes           = tree.numLoadingNodes;
+		var acceptableCellSizeMin     = tree.acceptableCellSizeMin;
+		var acceptableCellSizeMax     = tree.acceptableCellSizeMax;
+    var acceptableNumLoadingNodes = tree.acceptableNumLoadingNodes;
+    var barmax = 16;
+    var barlen = Math.min(Math.floor(numLoadingNodes/acceptableNumLoadingNodes*barmax), barmax);
 		$("#info").html(
-			"<p>Node x-y Dimension:&nbsp;" + nodeDim + "</p>" +
-			"<p>Acceptable Cell Size:&nbsp;" + acceptableCellSizeMin + "px <= Cell <= " + acceptableCellSizeMax + "px</p>" +
+			//"<p>Node x-y Dimension:&nbsp;" + nodeDim + "</p>" +
+			//"<p>Acceptable Cell Size:&nbsp;" + acceptableCellSizeMin + "px <= Cell <= " + acceptableCellSizeMax + "px</p>" +
+			"<p>Number of Loading Nodes:" +  "=".repeat(barlen) + "&nbsp;".repeat(barmax-barlen) + "|" + "</p>" +
 			"<p>Number of Nodes:" + numNodes + "</p>"
 		);
 		

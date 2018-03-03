@@ -1,80 +1,9 @@
 <!DOCTYPE html> 
-<!-- 
-the tag avobe is used to define DTD(Document Type Definition)
-DTD declares which version of html is used in this file
-these below are some of
-HTML5 : <!DOCTYPE html> 
-HTML 4.01 Strict : <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-HTML 4.01 Transitional : <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-HTML 4.01 Frameset : <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
--->
-
-<!-- 
-Browser consists of front-end(firefox, Safari, Chrome) and engine(Gecko, WebKit)
-Browser's Two main Works
-	1. Display page
-	2. Give Web apprications(javascript) APIs
-		We can use the functions of Platform(Browser + OS)
-		like custermizing event handler, modifing DOM, calling HTTP to download data(AJAX)
-
-What's browser doing behind us?
-	1. download via HTTP
-		cliant  -> request  w/ URL  -> server
-		cliant <-  response w/ DATA <- server
-		GET : used to download data from a server
-		PUT : a kind of singnal to change something such as update a database
-	
-	2. parse and make model(DOM tree, CSSOM tree) from elements
-		></->HTML -> DOM   tree
-		CSS  -> CSSOM tree
-		DOM + CSSOM -> Render tree(CSS Box model)
-		Render tree has CSS data as well as DOM
-	
-	3. layout
-		compute the size and position of each box(node) of render tree
-		How to compute them is as many as the number of layout(flow, float, absolute, multi-column, table/grid)
-		ex. flow : left-right and top-bottom
-		Basic Idea
-		1. child decide the size
-		2. parent decide the position of the child
-		3. parent's size is determined from the child's size and position
-		
-	4. rendering
-		render tree is traversed and render's "paint()" event is called to dsplay content on the screen
-
-Parsing execution flow is as follows
-	1. download this HTML document
-	2. start parsing the HTML document FROM TOP TO BOTTOM
-	3. if HTML parsing comes to link element of stylesheet, the document is downloaded, parsed
-	4. if HTML parsing comes to link element of javascript, the document is downloaded, parsed, and run
-	5. and HLML parsing continues parsing body element
-	6. When parsing is ended, the event "onload" is fired 
--->
-
-<html lang="ja"> 
-<!-- 
-this is a tag, a start tag of hmlt element
-start tag and end tag makes an element
-html is an element name
-lang is an attribute of this tag 
-the form of attribute is "name = "value"" (the value of attribute must be quoted by double quotation)
-a html element is the root of a HTML document
-so each html document has only one html element
--->
-
+<html> 
 <head>
-<!-- head element represents a collection of metadata about the document -->
 	<meta charset="UTF-8">
-	<!-- meta element represents any metadata that other meta-related element(link, script, style, or title) can not represent -->
-	<!-- charset attribute declares the character encoding used in this page -->
 	<link rel="stylesheet" href="css/html5reset-1.6.1.css">
 	<link rel="stylesheet" href="css/main.css">
-	<!-- link element specifies relationship between this document and another -->
-	<!-- linked documents are loaded on the fly in order from top to bottom -->
-	<!-- rel  attribute of a link element defines the relationship of linked document to current document -->
-	<!-- type attribute of a link element specifies the type(text/html, text/css, ...) of the liked document -->
-	<!-- href attribute of a link element specifies the URL of the linked document -->
-	<!-- In html5 you can omit the type attribute of link , style, script element. -->
 	<script src="js/lib/jquery-1.10.2.js"></script>
 	<script src="js/lib/webgl-debug.js"></script>
 	<script src="js/lib/glMatrix.js"></script>

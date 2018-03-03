@@ -14,4 +14,4 @@ ${TARGET0}: ${OBJ0}
 	${CXX} ${CXX_FLAGS} $< -o $@
 
 clean:
-	rm *.o *.exe
+	rm -f *.o ${TARGET0}

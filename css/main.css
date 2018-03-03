@@ -1,7 +1,7 @@
 body{
 	color: #333333;
 	background-color: #ffffff;
-	font-family:'Lucida Grande', 'Hiragino Kaku Gothic ProN', 'ÉqÉâÉMÉmäpÉS ProN W3', Meiryo, ÉÅÉCÉäÉI, sans-serif;
+  font-family: "Courier New", Consolas, monospace;
 	padding: 10px;
 }
 
@@ -12,8 +12,8 @@ h1 {
 }
 
 #info {
-/* 	font-family: Consolas, 'Courier New', Courier, Monaco, monospace; */
-	font-size: 25px; 
+  font-family: "Courier New", Consolas, monospace;
+	font-size: 20px; 
 	font-weight: bold;
 	color: rgba(255, 180, 0, 0.7);
 	margin-top: 20px; 
