@@ -3,12 +3,6 @@ var LOD = function () {
 	// private variable //
 	//////////////////////
 	var _connector = new function () {
-		//var scheme = "http";
-		//var host = document.domain;
-		//var port = "8080";
-		//var basePath = "/lod.js/data";
-		//this.baseURL = scheme + "://"+ host + ":" + port + basePath;
-
 		this.baseURL = document.URL.replace(/[^/]+$/, "") + "data";
 		this.getConfigURL = function () { 
 			var url = this.baseURL + "/" + "config.json";
@@ -48,8 +42,8 @@ var LOD = function () {
 			"root": null,
 			"numLevel": 0,
 			"numNodes": 0,
-			"acceptableCellSizeMax": 3.0, // if max cell length of a node in pixel go over  this number, the node is divided
-			"acceptableCellSizeMin": 1.0, // if max cell length of a node in pixel go under this number, the node is divided
+			"acceptableCellSizeMax": 8.0, // if max cell length of a node in pixel go over  this number, the node is divided
+			"acceptableCellSizeMin": 1.0, // if max cell length of a node in pixel go under this number, the node is composited
 			"acceptableNumNodes": 512
 		};
 		loadConfig(tree);
