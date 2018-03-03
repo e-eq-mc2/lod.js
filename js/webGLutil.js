@@ -30,19 +30,19 @@ function initWebGL(canvas, ENABLE_GL_DEBUG) {
 
   var cw = canvas.width;
   var ch = canvas.height;
-
+  
   // set the display size of the canvas.
   canvas.style.width = cw + "px";
   canvas.style.height = ch + "px";
-
+  
   var dpr = window.devicePixelRatio || 1;
   canvas.width = cw * dpr;
   canvas.height = ch * dpr;
-
-	gl.viewportWidth  = canvas.width ;
-	gl.viewportHeight = canvas.height;
-
-	return gl;
+  
+  gl.viewportWidth  = canvas.width ;
+  gl.viewportHeight = canvas.height;
+  
+  return gl;
 }
 	
 function initProgram(gl, vertexShaderID, fragmentShaderID) {
