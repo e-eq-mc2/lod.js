@@ -43,10 +43,10 @@ var LOD = function () {
       "numLevel": 0,
       "numNodes": 0,
       "numLoadingNodes": 0,
-      "acceptableCellSizeMax": 5.0, // if max cell length of a node in pixel go over  this number, the node is divided
+      "acceptableCellSizeMax": 4.0, // if max cell length of a node in pixel go over  this number, the node is divided
       "acceptableCellSizeMin": 2.0, // if max cell length of a node in pixel go under this number, the node is composited
-      "acceptableNumNodes": 4096,
-      "acceptableNumLoadingNodes": 64
+      "acceptableNumNodes":   4096,
+      "acceptableNumLoadingNodes": 16
     };
     loadConfig(tree);
     addRoot(tree, gl, prgObj);
@@ -99,13 +99,16 @@ var LOD = function () {
   this.updateTree = function (tree, gl, prgObj, mvpMatrix) {
     var viewportWidth  = gl.viewportWidth;
     var viewportHeight = gl.viewportHeight;
-    var acceptableCellSizeMax = tree.acceptableCellSizeMax;
-    var acceptableCellSizeMin = tree.acceptableCellSizeMin;
-    var acceptableNumNodes = tree.acceptableNumNodes;
+    var acceptableCellSizeMax     = tree.acceptableCellSizeMax;
+    var acceptableCellSizeMin     = tree.acceptableCellSizeMin;
+    var acceptableNumNodes        = tree.acceptableNumNodes;
     var acceptableNumLoadingNodes = tree.acceptableNumLoadingNodes;
+    var nodeBuf = [];
     //console.log("tree.numNodes:" + tree.numNodes);
     (function traverse(node) {
       var dpxl = deltaPixels(node, mvpMatrix, viewportWidth, viewportHeight);
+      node.dpxl = dpxl;
+
       // lock node
       if ( node.getNumReadyChildren() == 4 ) {
         // unlock node
@@ -119,24 +122,42 @@ var LOD = function () {
         }
       } else {
         if ( dpxl.maxCellSize > acceptableCellSizeMax && dpxl.isInsideFrustum && node.level > 0 ) {
+          nodeBuf.push(node);
           // lock tree
-          if ( tree.numNodes < acceptableNumNodes && tree.numLoadingNodes < acceptableNumLoadingNodes ) {
-            // unlock tree
-            // lock node
-            if ( node.getNumLoadingChildren() == 0 ) {
-              node.loadingChildren = 1<<0 | 1<<1 | 1<<2 | 1<<3; // make all bits up
-              // unlock node
-              for (var childIdx=0; childIdx < 4; ++childIdx) {
-                addChild(node, childIdx, tree, gl, prgObj);
-              }
-            }
-            // unlock node
-          }
+          //if ( tree.numNodes < acceptableNumNodes && tree.numLoadingNodes < acceptableNumLoadingNodes ) {
+          //  // unlock tree
+          //  // lock node
+          //  if ( node.getNumLoadingChildren() == 0 ) {
+          //    node.loadingChildren = 1<<0 | 1<<1 | 1<<2 | 1<<3; // make all bits up
+          //    nodeBuf.push(node);
+          //    // unlock node
+          //    for (var childIdx=0; childIdx < 4; ++childIdx) {
+          //      addChild(node, childIdx, tree, gl, prgObj);
+          //    }
+          //  }
+          //  // unlock node
+          //}
           // unlock tree
         }
       }
     } (tree.root));
-    
+
+    nodeBuf.sort(function(a,b){
+      if( a.dpxl.maxCellSize > b.dpxl.maxCellSize ) return -1;
+      if( a.dpxl.maxCellSize < b.dpxl.maxCellSize ) return 1;
+      return 0;
+    });
+
+    for(var i = 0; i < nodeBuf.length; i++) {
+      if ( tree.numNodes > acceptableNumNodes || tree.numLoadingNodes > acceptableNumLoadingNodes ) break;
+
+      var node = nodeBuf[i];
+      // unlock node
+      for (var childIdx=0; childIdx < 4; ++childIdx) {
+        addChild(node, childIdx, tree, gl, prgObj);
+      }
+    }
+
     return;
 
     ////////////////////
@@ -315,6 +336,8 @@ var LOD = function () {
     this.children = new Array(4);
     this.loadingChildren = 0;
     this.readyChildren = 0;
+    
+    this.dpxl = 0.0;
   }
   Node.prototype.getNumReadyChildren = function () {
     // lock this
