@@ -121,8 +121,8 @@ $(function() {
 		$("#info").html(
 			//"<p>Node x-y Dimension:&nbsp;" + nodeDim + "</p>" +
 			//"<p>Acceptable Cell Size:&nbsp;" + acceptableCellSizeMin + "px <= Cell <= " + acceptableCellSizeMax + "px</p>" +
-			"<p>Number of Loading Nodes:" +  "=".repeat(barlen) + "&nbsp;".repeat(barmax-barlen) + "|" + "</p>" +
-			"<p>Number of Nodes:" + numNodes + "</p>"
+			"<p>Loading Nodes:" +  "=".repeat(barlen) + "&nbsp;".repeat(barmax-barlen) + "|" + "</p>" +
+			"<p>Nodes in Tree:" + numNodes + "</p>"
 		);
 		
 
